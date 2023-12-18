@@ -1,0 +1,31 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/common.css'%}">
+<link rel="stylesheet" href="{% static 'css/main.css'%}">
+<header> <!--상단-->
+    <div class="container">          
+        <h1><a href="{% url 'Final:home' %}"><span>Analyzer</span></a></h1>
+        <nav>
+            <ul>
+                  <li><a href="{% url 'Final:home' %}">Home</a> / <a href="{% url 'Final:base' %}">Board</a> / <a href="{% url 'Final:about-us' %}">About-us</a></li> 
+                  <li>
+                  {% if user.is_authenticated %}
+                  <a class="light-bg light-txt btn" href="{% url 'common:logout' %}">
+                    <span class="material-symbols-outlined">lock</span>
+                    <span>{{ user.username }} (Logout)</span>
+                  </a>
+                  {% else %}
+                  <a class="light-bg light-txt btn" href="{% url 'common:login' %}">
+                    <span class="material-symbols-outlined">lock_open</span>
+                    <span>Login</span>
+                  </a>
+                  {% endif %}
+                  </li>
+                  <li>
+                  {% if not user.is_authenticated %}
+                  <a class="highlight-bg highlight-txt btn" href="{% url 'common:signup' %}">Sign up</a>
+                  {% endif %}
+                  </li>         
+            </ul>
+        </nav>
+    </div>
+</header>

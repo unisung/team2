@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>T-SNE Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+        .chart-container {
+            margin-bottom: 40px;
+        }
+        canvas {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <div class="container">
+        <h1>T-SNE Visualization of Keywords</h1>
+        <!-- 각 섹션별 차트 컨테이너 -->
+        <div id="tsneChartContainer"></div>
+    </div>
+
+    <script>
+        const tsneData = {{ tsne_data | safe }};
+        
+        // 각 섹션별 데이터 그룹화
+        const groupedData = tsneData.reduce((acc, dataPoint) => {
+            acc[dataPoint.section] = acc[dataPoint.section] || [];
+            acc[dataPoint.section].push(dataPoint);
+            return acc;
+        }, {});
+    
+        Object.keys(groupedData).forEach(section => {
+            // 각 섹션별 캔버스 생성
+            const canvasId = `tsneChart${section}`;
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'chart-container';
+            chartContainer.innerHTML = `<h2>Section ${section}</h2><canvas id="${canvasId}" width="800" height="600"></canvas>`;
+            document.getElementById('tsneChartContainer').appendChild(chartContainer);
+    
+            // 차트 생성
+            createChart(canvasId, groupedData[section]);
+        });
+    
+        function createChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: `Section ${canvasId}`,
+                        data: data.map(d => ({
+                            x: d.x, 
+                            y: d.y,
+                            label: d.label  // 여기에 'label' 속성 추가
+                        })),
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)'
+                    }]
+                },
+                options: {
+                    tooltips: {
+                        enabled: true,
+                        mode: 'single',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var dataset = data.datasets[tooltipItem.datasetIndex];
+                                var index = tooltipItem.index;
+                                return dataset.data[index].label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { type: 'linear', position: 'bottom' },
+                        y: { type: 'linear', position: 'left' }
+                    }
+                }
+            });
+        }
+    </script>
+    
+    
+
+    <hr style="height:1px;border-width:0;color:black;background-color:black">
+    {% include "footer.html" %}
+</body>
+</html>

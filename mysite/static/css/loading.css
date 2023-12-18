@@ -1,0 +1,69 @@
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    width: 1000px;
+}
+
+.search-box input[type="text"] {
+    width: 100%;
+    padding: 10px 50px 10px 20px; /* 오른쪽에 버튼을 위한 공간 추가 */
+    border: 1px solid #ccc;
+    border-radius: 30px;
+}
+
+.search-box button {
+    position: absolute;
+    right: 10px; /* 오른쪽 끝으로 이동 */
+    top: 0; /* 상단 정렬 */
+    height: 100%; /* 입력 필드와 높이를 맞춤 */
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 10px;
+    box-sizing: border-box; /* 패딩을 포함한 전체 너비 유지 */
+}
+
+.search-box button img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+/* Loading overlay style */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7); /* Translucent white background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none; /* Initially hidden */
+}
+
+/* Loading window style */
+#loading {
+    position: fixed; /* Keep this fixed for centering in viewport */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#loading img {
+    margin-bottom: 20px; /* Space between image and text */
+}
+
+#loading p {
+    position: absolute;
+    top: calc(100% + 20px); /* Positioned below the image */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center; /* Center the text */
+}

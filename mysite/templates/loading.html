@@ -1,0 +1,21 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/loading.css' %}">
+<!-- Loading JavaScript 추가 -->
+<script>
+    $(document).ready(function() {
+        $('.box').submit(function() {
+            // 폼제출시 loading overlay 표시
+            $('.loading-overlay').show();
+            // 폼제출시 loading 표시
+            $('#loading').show();
+
+        });
+    });
+</script>
+
+<div class="loading-overlay" style="display: none;">
+    <div id="loading">
+        <img src="{% static 'images/loading.gif' %}" alt="Loading...">
+        <p style="font-size: x-large; font-weight: bold;">Loading...</p>
+    </div>
+</div>

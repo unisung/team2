@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>result</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <!-- Custom CSS for DataTables -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}">
+    
+
+    <style>
+        #myDataTable td, #myDataTable th {
+            text-align: center !important;
+            overflow: hidden; /* 콘텐츠가 셀 크기를 초과할 경우 숨김*/
+            text-overflow: ellipsis; /* 텍스타가 셀 크기를 초과할 경우, 텍스트의 끝에 줄임표 표시 */
+            white-space: nowrap; /* 텍스트가 셀 너비를 넘어 갈 때 줄바꿈하지 않고 한 줄로 유지 */
+        }
+        #myDataTable {
+            table-layout: fixed;
+            
+        }
+        #myDataTable .col0 {
+            width: 250px;
+            
+        }
+        .col0 {
+            background-color: #9ac75b;
+        }
+        .col1 {
+            background-color: #9ac75b;
+        }
+        .col2 {
+            background-color: #9ac75b;
+        }
+        #myDataTable .col1 { width: 200px; }
+        #myDataTable .col2 { width: 130px; }
+        .dt-head-center {
+            text-align: center !important;            
+        }
+        .custom-button {
+            border: 0;
+            outline: none;
+            font-size: 30px;
+            margin: 30px;
+            background: #FFB366;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            }
+
+        .custom-button:hover {
+            color: white;
+            background: #FFCC99;
+            }
+        .learn-more {
+          font-weight: 600;
+          color: #382b22;
+          text-transform: uppercase;
+          padding: 0.75em 1.5em; /* 수정한 부분 */
+          background: #fff0f0;
+          border: 2px solid #b18597;
+          border-radius: 0.5em; /* 수정한 부분 */
+          transform-style: preserve-3d;
+          transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        .learn-more::before {
+          position: absolute;
+          content: '';
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #f9c4d2;
+          border-radius: inherit;
+          box-shadow: 0 0 0 2px #b18597, 0 0.625em 0 0 #ffe3e2;
+          transform: translate3d(0, 0.75em, -1em);
+          transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        .learn-more:hover {
+          background: #ffe9e9;
+          transform: translate(0, 0.25em);
+        }
+
+        .learn-more:hover::before {
+          box-shadow: 0 0 0 2px #b18597, 0 0.5em 0 0 #ffe3e2;
+          transform: translate3d(0, 0.5em, -1em);
+        }
+
+        .learn-more:active {
+          background: #ffe9e9;
+          transform: translate(0em, 0.75em);
+        }
+
+        .learn-more:active::before {
+          box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
+          transform: translate3d(0, 0, -1em);
+        }
+
+
+    </style>
+
+    
+    <script>
+        $(document).ready(function() {
+            $('#myDataTable').DataTable({
+                "scrollX": true,
+                "autoWidth": false,
+                "columnDefs": [
+                    { "className": "dt-head-center", "targets": "_all" },
+                    { "className": "col0", "targets": [0] },
+                    { "className": "col1", "targets": [1] },
+                    { "className": "col1", "targets": [2] },
+                    { "className": "col1", "targets": [3] },
+                    { "className": "col1", "targets": [4] },
+                    { "className": "col1", "targets": [5] },
+                    { "className": "col1", "targets": [6] },
+                    { "className": "col2", "targets": [7] }
+        ]
+            });
+        });
+    </script>
+    
+    
+</head>
+<body>
+
+    <!-- 로딩 오버레이 HTML -->
+    <div class="loading-overlay" style="display: none;">
+        <div id="loading">
+            <img src="{% static 'images/loading.gif' %}" alt="Loading...">
+            <p style="font-size: x-large; font-weight: bold;">Loading...</p>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // T-SNE, Wordcloud, LDA 버튼 클릭 이벤트 핸들러
+            $('btn[name="T_SNE_button"], button[name="lda_button"], button[name="wordcloud_button"]').click(function() {
+                // 로딩 오버레이 표시
+                $('.loading-overlay').show();
+            });
+        });
+    </script>
+
+    {% include "navbar.html" %}
+    {% include "loading.html" %}
+    <hr>
+    <!-- MAIN -->
+    <main role="main">
+        <div class="container" id="main1">
+            <p>Keyword: {{ keyword }}</p>
+            <!-- Search Data-->
+            <form action="{% url 'Final:result' %}" method="post">
+                {% csrf_token %}
+                <div class="row" style="padding: 1em;">
+                    <label for="keyword" style="display: inline-block; max-width: 115px;"class=" col">데이터 검색:</label>
+                    <input type="text" id="keyword" name="keyword" style="display: inline-block; max-width:150px; height: 25px; margin: auto;"class="col">
+                    <button type="submit" class="btn btn-primary; col">
+                        <i class="bi bi-search"></i>
+                    </button>                
+                </div>
+            </form>            
+            <div>
+                {{ items_html|safe }}
+            </div>
+             
+
+            
+        <!-- CSV 다운로드 -->   
+            <a href="/Final/download_csv/?keyword={{keyword}}">Download Search Results as CSV</a>
+            <hr>
+        </div>
+
+
+        <div class="container" id="main2">
+            <!--ipc count-->
+            <div class="row">
+                <div class="col-sm-6" style="margin-left: auto;">
+                    
+                    <canvas id="ipcGraph" width="636" height="600"></canvas>
+                    </table>
+                </div>
+                
+                <script>
+                    // 데이터 준비
+                    var ipcData = {
+                        labels: [],
+                        datasets: [{
+                            label: 'IPC Section Counts',
+                            data: [],
+                            backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+                
+                    // django 템플릿에서 데이터 가져오기
+                    {% for count in ipc_section_counts_list %}
+                        ipcData.labels.push("{{ count.0 }}"); // 첫 번째 요소는 IPC 섹션명
+                        ipcData.datasets[0].data.push("{{ count.1 }}"); // 두 번째 요소는 카운트
+                    {% endfor %}
+                
+                    // 그래프 생성
+                    var ctx = document.getElementById('ipcGraph').getContext('2d');
+                    var ipcChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: ipcData,
+                        options: {
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        maxRotation: 0, // 최대 기울기 각도 (0은 수평)
+                                        autoSkip: true, // 레이블이 서로 겹치지 않도록 자동으로 건너뛰기
+                                        autoSkipPadding: 20, // 레이블 간의 최소 공간 (픽셀 단위)
+                                        padding: 5 // 레이블과 축 사이의 간격
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                datalabels: {
+                                    display: true,
+                                    align: 'top',
+                                    formatter: function(value, context) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+                </script>
+                
+                
+
+            <!-- TOP 20 -->
+            
+                <div class="col-sm-6" style="margin-right: auto;">                    
+                    <canvas id="topApplicantsGraph" width="636" height="600"></canvas>
+                </div>
+                <script>
+                    var topApplicantsData = {
+                        labels: [],
+                        datasets: [{
+                            label: 'Top 10 Applicants',
+                            data: [],
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+                    function wrapLabel(label, chunkSize) {
+                        var result = [];
+                        for (var i = 0; i < label.length; i += chunkSize) {
+                            result.push(label.substring(i, i + chunkSize));
+                        }
+                        return result;
+                    };
+                
+                    // Django 템플릿에서 데이터 가져오기
+                    {% for key, value in top_applicants_data_items %}
+                        topApplicantsData.labels.push(wrapLabel("{{ key }}", 4)); // 레이블을 25자로 나누어 줄바꿈 처리
+                        topApplicantsData.datasets[0].data.push("{{ value }}");
+                    {% endfor %}
+                
+                    // 그래프 생성
+                    var ctx = document.getElementById('topApplicantsGraph').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar', // 또는 다른 차트 유형 (예: 'line', 'pie' 등)
+                        data: topApplicantsData,
+                        options: {
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        maxRotation: 0, // 최대 기울기 각도 (0은 수평)
+                                        autoSkip: false, // 레이블이 서로 겹치지 않도록 자동으로 건너뛰기
+                                        autoSkipPadding: 25, // 레이블 간의 최소 공간 (픽셀 단위)
+                                        padding: 5 // 레이블과 축 사이의 간격
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                datalabels: {
+                                    display: true,
+                                    align: 'top',
+                                    formatter: function(value, context) {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+                </script>
+            </div>
+        </div>
+        <br style="height:20px;">
+            <!-- Word2Vec, LDA, TSNE-->
+            <section class="features container" id="main3">
+                <ul class="feature_list">
+                    <li>
+                        <span class="images">
+                            <img src="{% static 'images/TSNE2.png' %}" width="300" height="300"/>
+                        </span>
+                        <form method="post" action="{% url 'Final:TSNE' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="keyword" value="{{ keyword }}">
+                            <br>
+                            <button type="submit" name="T_SNE_button" class="learn-more">Word2Vec</button>
+                        </form>
+                        <br>
+                        <br>
+                        <p>
+                            Word2Vec는 고차원 데이터를 시각적으로 이해하기 쉬운 저차원 공간으로 투영하는 데 사용됩니다. Word2Vec으로 학습한 단어 벡터는 고차원이므로 단어 간의 의미적 유사성을 시각적으로 파악하고 탐색할 수 있도록 여기서는 차원 축소 기술 중 하나인 t-SNE를 제공합니다.
+                        </p>
+                    </li>
+                    <li>
+                        <span class="images">
+                            <img src="{% static 'images/LDA2.png' %}" width="300" height="300"/>
+                        </span>
+                        <form method="post" action="{% url 'Final:lda_topic' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="keyword" value="{{ keyword }}">
+                            <br>
+                            <button type="submit" name="lda_button" class="learn-more">LDA Analysis</button>
+                        </form>
+                        <br>
+                        <br>
+                        <p>
+                            LDA(Latent Dirichlet Allocation)는 토픽 모델링의 하나로, 문서 집합에서 토픽 분포를 추론하고 어떤 주제가 존재하는지를 발견하는 확률적 생성 모델입니다. 여기서는 LDA의 결과를 시각적으로 탐색하고 해석하기 위한 도구 중 하나인 LDAvis를 제공합니다.
+                        </p>
+                    </li>
+                    <li>
+                        <span class="images">
+                            <img src="{% static 'images/wordcloud2.png' %}" width="300" height="300"/>
+                        </span>
+                        <form method="post" action="{% url 'Final:wordcloud' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="keyword" value="{{ keyword }}">
+                            <br>
+                            <button type="submit" name="wordcloud_button" class="learn-more">WordCloud</button>
+                        </form>
+                        <br>
+                        <br>
+                        <p>
+                            WordCloud는 텍스트 데이터에서 많이 등장하는 단어들을 시각적으로 표현하는 방법 중 하나입니다. WordCloud는 빈도 기반 시각화 방법이므로, 단어의 빈도가 중요한 의미를 가질 때 효과적으로 활용됩니다. 중요한 단어를 더욱 강조하고 인상적인 형태로 보여줍니다.
+                        </p>
+                    </li>
+                </ul>
+              </section>
+            <br>   
+        </div>
+    </main> 
+    
+   <hr style="height:1px;border-width:0;color:black;background-color:black">
+  <!-- FOOTER -->
+  {% include "footer.html" %}  
+</body>
+</html>
+

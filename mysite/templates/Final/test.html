@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Search For Data</h1>
+        <form action="{% url 'Final:test' %}" method="post">
+            {% csrf_token %}
+            <label for="keyword">데이터 검색:</label>
+            <input type="text" id="keyword" name="query">
+            <input type="submit" value="Search">
+        </form>
+        {{ items|safe }}
+    </div>
+</body>
+</html>

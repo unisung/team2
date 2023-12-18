@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-SNE Visualization</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+</head>
+<body>
+    {% include "navbar.html" %}
+    <!-- t-SNE Visualization -->
+    <br>
+    <h1 class="resultp">Visualize t-SNE analysis for top 3 section</h1>
+    <br>
+    <p class="keyword">Keyword: {{ keyword }}</p>
+    <div style="margin-bottom: 80px;"></div>
+    <div id="tsne-vis">
+        <!-- 여러 이미지를 순회하며 표시 -->
+        {% if tsne_graphs %}
+            {% for section, img in tsne_graphs.items %}                
+                <div style="text-align: center;">
+                    <h2 style="font-family: Arial, sans-serif; font-size: 24px; color: #333;">Section: {{ section }}</h2>
+                    <img src="{{ img }}" alt="t-SNE Image of {{ section }}" style="width: 1200px; height: 1200px;"/>
+                </div>
+                <br>
+            {% endfor %}
+        {% else %}
+            <p>No data available to display.</p>
+        {% endif %}
+    </div>
+
+    <!-- FOOTER -->
+    <hr style="height:1px;border-width:0;color:black;background-color:black">
+    {% include "footer.html" %}
+</body>
+</html>
